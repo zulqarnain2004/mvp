@@ -1,0 +1,326 @@
+/* Age Group Specific Animations */
+
+/* Age 6-8 Animations (Playful, Colorful) */
+.age-6-8 .card {
+    animation: rainbowBorder 3s infinite;
+}
+
+.age-6-8 .option-item {
+    animation: bounceIn 0.5s ease-out;
+}
+
+.age-6-8 .option-item:hover {
+    animation: wiggle 0.5s ease;
+}
+
+.age-6-8 .btn {
+    animation: buttonGlow 2s infinite;
+}
+
+@keyframes rainbowBorder {
+    0%, 100% { border-color: #ff9a9e; }
+    25% { border-color: #fad0c4; }
+    50% { border-color: #a1c4fd; }
+    75% { border-color: #c2e9fb; }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) translateY(100px);
+    }
+    50% {
+        transform: scale(1.05) translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(3deg); }
+    75% { transform: rotate(-3deg); }
+}
+
+@keyframes buttonGlow {
+    0%, 100% { box-shadow: 0 0 20px rgba(255, 154, 158, 0.5); }
+    50% { box-shadow: 0 0 40px rgba(255, 154, 158, 0.8); }
+}
+
+/* Age 9-11 Animations (Dynamic, Interactive) */
+.age-9-11 .card {
+    animation: slideInLeft 0.8s ease-out;
+}
+
+.age-9-11 .option-item {
+    animation: flipIn 0.6s ease-out;
+}
+
+.age-9-11 .option-item:hover {
+    animation: pulse 0.5s ease;
+}
+
+.age-9-11 .progress-bar {
+    animation: progressFill 2s ease-out;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes flipIn {
+    0% {
+        transform: rotateY(90deg);
+        opacity: 0;
+    }
+    100% {
+        transform: rotateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes progressFill {
+    from { width: 0%; }
+}
+
+/* Age 12-14 Animations (Sophisticated, Smooth) */
+.age-12-14 .card {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.age-12-14 .option-item {
+    animation: zoomIn 0.5s ease-out;
+}
+
+.age-12-14 .option-item:hover {
+    animation: float 2s ease-in-out infinite;
+}
+
+.age-12-14 .timer {
+    animation: timerBlink 1s infinite;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes timerBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Particle Effects */
+.particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999;
+}
+
+.particle {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    animation: particleFloat 20s infinite linear;
+}
+
+@keyframes particleFloat {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Confetti Animation */
+.confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    opacity: 0;
+    animation: confettiFall 3s linear forwards;
+}
+
+@keyframes confettiFall {
+    0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* Celebration Animations */
+.celebration {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 4rem;
+    z-index: 1001;
+    animation: celebrationPop 1s ease-out;
+}
+
+@keyframes celebrationPop {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+    70% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Text Animations */
+.text-reveal {
+    animation: textReveal 1s ease-out;
+}
+
+@keyframes textReveal {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+    to {
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+/* Shake Animation */
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+/* Bounce Animation */
+.bounce {
+    animation: bounce 0.5s ease;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+/* Fade In Stagger */
+.stagger-item {
+    opacity: 0;
+    animation: fadeInStagger 0.5s ease-out forwards;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 0.1s; }
+.stagger-item:nth-child(2) { animation-delay: 0.2s; }
+.stagger-item:nth-child(3) { animation-delay: 0.3s; }
+.stagger-item:nth-child(4) { animation-delay: 0.4s; }
+.stagger-item:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes fadeInStagger {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading Wave */
+.wave-loading {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.wave-loading div {
+    width: 10px;
+    height: 30px;
+    background: var(--primary-color);
+    animation: wave 1s ease-in-out infinite;
+}
+
+.wave-loading div:nth-child(2) { animation-delay: 0.1s; }
+.wave-loading div:nth-child(3) { animation-delay: 0.2s; }
+.wave-loading div:nth-child(4) { animation-delay: 0.3s; }
+.wave-loading div:nth-child(5) { animation-delay: 0.4s; }
+
+@keyframes wave {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(2); }
+}
+
+/* Gradient Text Animation */
+.gradient-text {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-1));
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease infinite;
+}

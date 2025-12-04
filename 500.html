@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Server Error{% endblock %}
+
+{% block content %}
+<div class="container text-center py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="error-container">
+                <h1 class="display-1 text-danger">500</h1>
+                <div class="error-icon mb-4">
+                    <i class="fas fa-exclamation-triangle fa-5x text-danger"></i>
+                </div>
+                <h2 class="mb-3">Internal Server Error</h2>
+                <p class="lead mb-4">
+                    Something went wrong on our end. Our team has been notified and is working to fix it.
+                </p>
+                
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> What happened?</h5>
+                    <p class="mb-0">
+                        The server encountered an unexpected condition that prevented it from fulfilling your request.
+                        This is usually temporary.
+                    </p>
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Try these solutions:</h5>
+                        <ul class="list-group list-group-flush text-start">
+                            <li class="list-group-item">
+                                <i class="fas fa-sync-alt text-primary"></i>
+                                <strong>Refresh the page</strong> - Sometimes a simple refresh solves the issue
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-clock text-primary"></i>
+                                <strong>Wait a few minutes</strong> - The issue might resolve itself shortly
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-home text-primary"></i>
+                                <strong>Return to homepage</strong> - Navigate back to a working page
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-cookie text-primary"></i>
+                                <strong>Clear browser cache</strong> - Outdated cache might cause issues
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-5">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-home"></i> Go to Homepage
+                    </a>
+                    <button onclick="window.location.reload()" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-sync-alt"></i> Refresh Page
+                    </button>
+                </div>
+                
+                <div class="mt-4">
+                    <p class="text-muted small">
+                        If the problem persists, please contact our support team with details about what you were trying to do.
+                    </p>
+                    <a href="mailto:support@cognitiveskills.test" class="btn btn-outline-danger">
+                        <i class="fas fa-life-ring"></i> Contact Support
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.error-container {
+    padding: 3rem;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+    border: 1px solid #feb2b2;
+}
+
+.error-icon {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}Results - {{ child.name }}{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="fas fa-chart-bar"></i> Test Results for {{ child.name }}</h1>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-child"></i> Child Information</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <p><strong>Name:</strong> {{ child.name }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><strong>Age:</strong> {{ child.age }} years</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><strong>Tests Taken:</strong> {{ test_results|length }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if test_results %}
+{% for result in test_results %}
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Test on {{ result.taken_at.strftime('%B %d, %Y at %I:%M %p') }}</h5>
+        <span class="badge {% if result.score >= 80 %}bg-success{% elif result.score >= 60 %}bg-warning{% else %}bg-danger{% endif %} fs-6">
+            Score: {{ "%.1f"|format(result.score) }}%
+        </span>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header bg-success text-white">
+                        <h6 class="mb-0"><i class="fas fa-thumbs-up"></i> Strong Points</h6>
+                    </div>
+                    <div class="card-body">
+                        {% if result.strong_points_list %}
+                        <ul class="list-group list-group-flush">
+                            {% for point in result.strong_points_list %}
+                            <li class="list-group-item">
+                                <i class="fas fa-check text-success"></i> {{ point }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted">No strong points recorded</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header bg-warning text-white">
+                        <h6 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Areas for Improvement</h6>
+                    </div>
+                    <div class="card-body">
+                        {% if result.weak_points_list %}
+                        <ul class="list-group list-group-flush">
+                            {% for point in result.weak_points_list %}
+                            <li class="list-group-item">
+                                <i class="fas fa-times text-danger"></i> {{ point }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted">No weak points recorded</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-info-circle"></i> Test Details</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <div class="stat-box">
+                                    <h3>{{ result.correct_answers }}/{{ result.total_questions }}</h3>
+                                    <p class="text-muted">Correct Answers</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-box">
+                                    <h3>{{ result.category }}</h3>
+                                    <p class="text-muted">Age Category</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-box">
+                                    <h3>{{ "%.1f"|format(result.score) }}%</h3>
+                                    <p class="text-muted">Overall Score</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-box">
+                                    <h3>{{ result.total_questions }}</h3>
+                                    <p class="text-muted">Total Questions</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<div class="card">
+    <div class="card-body text-center">
+        <a href="{{ url_for('test_selection', child_id=child.id) }}" class="btn btn-primary btn-lg">
+            <i class="fas fa-redo"></i> Take Another Test
+        </a>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary btn-lg">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+{% else %}
+<div class="alert alert-info">
+    <h4><i class="fas fa-info-circle"></i> No Test Results Yet</h4>
+    <p>{{ child.name }} hasn't taken any tests yet. Start their first test to see results here.</p>
+    <a href="{{ url_for('test_selection', child_id=child.id) }}" class="btn btn-primary">
+        <i class="fas fa-play"></i> Start First Test
+    </a>
+</div>
+{% endif %}
+{% endblock %}

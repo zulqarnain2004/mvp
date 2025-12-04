@@ -1,0 +1,922 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Cognitive Skills Test for Kids{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Family-friendly theme */
+    :root {
+        --primary-kid: #FF6B8B;
+        --secondary-kid: #6A67CE;
+        --accent-kid: #FFD166;
+        --success-kid: #06D6A0;
+        --info-kid: #118AB2;
+        --warning-kid: #FF9E6D;
+        --fun-purple: #A78BFA;
+        --fun-green: #34D399;
+        --fun-blue: #60A5FA;
+        --fun-yellow: #FBBF24;
+    }
+    
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, 
+            rgba(255, 107, 139, 0.1) 0%, 
+            rgba(106, 103, 206, 0.1) 50%, 
+            rgba(255, 209, 102, 0.1) 100%);
+        border-radius: 30px;
+        padding: 60px 40px;
+        margin: 40px 0;
+        position: relative;
+        overflow: hidden;
+        border: 3px solid var(--accent-kid);
+    }
+    
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, 
+            rgba(255, 107, 139, 0.05) 0%, 
+            rgba(106, 103, 206, 0.05) 25%, 
+            rgba(255, 209, 102, 0.05) 50%, 
+            transparent 70%);
+        animation: heroFloat 20s infinite linear;
+        z-index: -1;
+    }
+    
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        background: linear-gradient(45deg, var(--primary-kid), var(--secondary-kid), var(--fun-purple));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 20px;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .hero-title::after {
+        content: '🧠';
+        position: absolute;
+        right: -60px;
+        top: 0;
+        font-size: 3rem;
+        animation: brainFloat 3s ease-in-out infinite;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.4rem;
+        color: #4B5563;
+        margin-bottom: 30px;
+        max-width: 800px;
+    }
+    
+    /* Kid-friendly Cards */
+    .fun-card {
+        background: white;
+        border-radius: 25px;
+        padding: 30px;
+        margin: 20px 0;
+        border: 3px solid;
+        border-image: linear-gradient(45deg, var(--fun-blue), var(--fun-green)) 1;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+    
+    .fun-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(255, 255, 255, 0.3), 
+            transparent);
+        transition: left 0.7s;
+    }
+    
+    .fun-card:hover::before {
+        left: 100%;
+    }
+    
+    .fun-card:hover {
+        transform: translateY(-15px) scale(1.02);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    }
+    
+    .fun-card-icon {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        display: inline-block;
+        animation: iconBounce 2s infinite;
+    }
+    
+    .fun-card-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--secondary-kid);
+        margin-bottom: 15px;
+    }
+    
+    .fun-card-text {
+        color: #666;
+        line-height: 1.6;
+        font-size: 1.1rem;
+    }
+    
+    /* Age Group Showcase */
+    .age-group-section {
+        background: linear-gradient(135deg, 
+            rgba(52, 211, 153, 0.05) 0%, 
+            rgba(96, 165, 250, 0.05) 50%, 
+            rgba(251, 191, 36, 0.05) 100%);
+        border-radius: 30px;
+        padding: 50px 30px;
+        margin: 50px 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .age-group-section::after {
+        content: '🌟';
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 4rem;
+        opacity: 0.1;
+        animation: starTwinkle 4s infinite;
+    }
+    
+    .age-group-card {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        text-align: center;
+        border: 3px solid;
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+    
+    .age-group-6-8 {
+        border-color: var(--primary-kid);
+        background: linear-gradient(135deg, 
+            rgba(255, 107, 139, 0.05), 
+            rgba(255, 209, 102, 0.05));
+    }
+    
+    .age-group-9-11 {
+        border-color: var(--secondary-kid);
+        background: linear-gradient(135deg, 
+            rgba(106, 103, 206, 0.05), 
+            rgba(96, 165, 250, 0.05));
+    }
+    
+    .age-group-12-14 {
+        border-color: var(--info-kid);
+        background: linear-gradient(135deg, 
+            rgba(17, 138, 178, 0.05), 
+            rgba(52, 211, 153, 0.05));
+    }
+    
+    .age-group-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    }
+    
+    .age-group-emoji {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        display: block;
+    }
+    
+    /* CTA Buttons */
+    .cta-button {
+        padding: 18px 45px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        border-radius: 50px;
+        border: none;
+        background: linear-gradient(45deg, var(--primary-kid), var(--secondary-kid));
+        color: white;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(255, 107, 139, 0.3);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .cta-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(255, 255, 255, 0.3), 
+            transparent);
+        transition: left 0.6s;
+    }
+    
+    .cta-button:hover::before {
+        left: 100%;
+    }
+    
+    .cta-button:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 20px 40px rgba(255, 107, 139, 0.4);
+    }
+    
+    .cta-button-secondary {
+        background: linear-gradient(45deg, var(--fun-green), var(--fun-blue));
+        box-shadow: 0 10px 30px rgba(52, 211, 153, 0.3);
+    }
+    
+    .cta-button-secondary:hover {
+        box-shadow: 0 20px 40px rgba(52, 211, 153, 0.4);
+    }
+    
+    /* Feature Grid */
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin: 50px 0;
+    }
+    
+    .feature-item {
+        text-align: center;
+        padding: 30px 20px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        border: 2px dashed var(--accent-kid);
+        transition: all 0.3s ease;
+    }
+    
+    .feature-item:hover {
+        background: white;
+        transform: translateY(-10px);
+        border: 2px solid var(--accent-kid);
+        box-shadow: 0 15px 35px rgba(255, 209, 102, 0.2);
+    }
+    
+    .feature-icon {
+        font-size: 2.5rem;
+        color: var(--secondary-kid);
+        margin-bottom: 20px;
+        display: inline-block;
+        width: 70px;
+        height: 70px;
+        line-height: 70px;
+        background: rgba(106, 103, 206, 0.1);
+        border-radius: 50%;
+    }
+    
+    /* Fun Elements */
+    .floating-characters {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: -1;
+    }
+    
+    .floating-character {
+        position: absolute;
+        font-size: 2.5rem;
+        animation: characterFloat 15s infinite linear;
+        opacity: 0.1;
+    }
+    
+    /* Testimonials */
+    .testimonial-section {
+        background: linear-gradient(135deg, 
+            rgba(167, 139, 250, 0.05) 0%, 
+            rgba(251, 191, 36, 0.05) 100%);
+        border-radius: 30px;
+        padding: 60px 40px;
+        margin: 60px 0;
+    }
+    
+    .testimonial-card {
+        background: white;
+        border-radius: 25px;
+        padding: 30px;
+        margin: 20px;
+        border-left: 5px solid var(--primary-kid);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        position: relative;
+    }
+    
+    .testimonial-card::before {
+        content: '"';
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        font-size: 4rem;
+        color: rgba(255, 107, 139, 0.1);
+        font-family: serif;
+    }
+    
+    .testimonial-text {
+        font-size: 1.1rem;
+        color: #555;
+        font-style: italic;
+        margin-bottom: 20px;
+    }
+    
+    .testimonial-author {
+        font-weight: 600;
+        color: var(--secondary-kid);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    /* How It Works */
+    .how-it-works {
+        counter-reset: step;
+        padding: 40px 0;
+    }
+    
+    .step-item {
+        position: relative;
+        padding-left: 100px;
+        margin: 40px 0;
+        min-height: 120px;
+    }
+    
+    .step-item::before {
+        counter-increment: step;
+        content: counter(step);
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(45deg, var(--primary-kid), var(--secondary-kid));
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        font-weight: 700;
+        box-shadow: 0 10px 20px rgba(255, 107, 139, 0.3);
+    }
+    
+    /* Animations */
+    @keyframes heroFloat {
+        0% { transform: translate(0, 0) rotate(0deg); }
+        25% { transform: translate(50px, 50px) rotate(90deg); }
+        50% { transform: translate(0, 100px) rotate(180deg); }
+        75% { transform: translate(-50px, 50px) rotate(270deg); }
+        100% { transform: translate(0, 0) rotate(360deg); }
+    }
+    
+    @keyframes brainFloat {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(10deg); }
+    }
+    
+    @keyframes iconBounce {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+    
+    @keyframes starTwinkle {
+        0%, 100% { opacity: 0.1; transform: scale(1); }
+        50% { opacity: 0.3; transform: scale(1.1); }
+    }
+    
+    @keyframes characterFloat {
+        0% {
+            transform: translate(0, 0) rotate(0deg);
+            opacity: 0.1;
+        }
+        25% {
+            transform: translate(100px, 100px) rotate(90deg);
+            opacity: 0.15;
+        }
+        50% {
+            transform: translate(50px, 200px) rotate(180deg);
+            opacity: 0.1;
+        }
+        75% {
+            transform: translate(-50px, 150px) rotate(270deg);
+            opacity: 0.15;
+        }
+        100% {
+            transform: translate(0, 0) rotate(360deg);
+            opacity: 0.1;
+        }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .hero-title::after {
+            right: -40px;
+            font-size: 2rem;
+        }
+        
+        .fun-card {
+            padding: 20px;
+        }
+        
+        .step-item {
+            padding-left: 70px;
+        }
+        
+        .step-item::before {
+            width: 50px;
+            height: 50px;
+            font-size: 1.4rem;
+        }
+        
+        .cta-button {
+            padding: 15px 30px;
+            font-size: 1rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .hero-section {
+            padding: 40px 20px;
+        }
+        
+        .hero-title {
+            font-size: 2rem;
+        }
+        
+        .hero-title::after {
+            position: relative;
+            right: 0;
+            display: block;
+            margin-top: 10px;
+        }
+        
+        .feature-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Floating Characters -->
+<div class="floating-characters">
+    <div class="floating-character" style="top: 10%; left: 5%; animation-delay: 0s;">🧩</div>
+    <div class="floating-character" style="top: 20%; right: 10%; animation-delay: 2s;">🎨</div>
+    <div class="floating-character" style="bottom: 30%; left: 15%; animation-delay: 4s;">🔢</div>
+    <div class="floating-character" style="bottom: 20%; right: 5%; animation-delay: 6s;">🌟</div>
+    <div class="floating-character" style="top: 50%; left: 20%; animation-delay: 8s;">🎯</div>
+    <div class="floating-character" style="top: 40%; right: 15%; animation-delay: 10s;">💡</div>
+</div>
+
+<!-- Hero Section -->
+<div class="hero-section text-center">
+    <h1 class="hero-title">
+        Welcome to Cognitive Skills Test
+    </h1>
+    <p class="hero-subtitle">
+        Where learning meets fun! Help your child develop critical thinking, problem-solving, 
+        and reasoning skills through engaging, age-appropriate challenges designed by experts.
+    </p>
+    
+    {% if not current_user.is_authenticated %}
+    <div class="mt-5">
+        <a href="{{ url_for('register') }}" class="cta-button me-3">
+            <i class="fas fa-rocket me-2"></i> Start Free Journey
+        </a>
+        <a href="{{ url_for('login') }}" class="cta-button cta-button-secondary">
+            <i class="fas fa-sign-in-alt me-2"></i> Login to Continue
+        </a>
+    </div>
+    {% else %}
+    <div class="mt-5">
+        <a href="{{ url_for('dashboard') }}" class="cta-button">
+            <i class="fas fa-tachometer-alt me-2"></i> Go to Dashboard
+        </a>
+        <a href="{{ url_for('animations') }}" class="cta-button cta-button-secondary ms-3">
+            <i class="fas fa-magic me-2"></i> See Fun Animations
+        </a>
+    </div>
+    {% endif %}
+    
+    <div class="mt-5">
+        <div class="feature-grid">
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-child"></i>
+                </div>
+                <h4>Age-Specific</h4>
+                <p class="text-muted">Tailored for kids 6-14 years</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <h4>Fun & Interactive</h4>
+                <p class="text-muted">Engaging puzzles and games</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h4>Track Progress</h4>
+                <p class="text-muted">Monitor cognitive development</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h4>Safe & Secure</h4>
+                <p class="text-muted">Child-friendly environment</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Age Group Showcase -->
+<div class="age-group-section">
+    <h2 class="text-center mb-5" style="color: var(--secondary-kid);">
+        <i class="fas fa-users me-2"></i> Perfect for Every Age Group
+    </h2>
+    
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="age-group-card age-group-6-8">
+                <span class="age-group-emoji">🎨</span>
+                <h3 class="mb-3" style="color: var(--primary-kid);">Ages 6-8</h3>
+                <p class="fun-card-text">
+                    Colorful animations, simple patterns, and playful challenges 
+                    that make learning exciting for young minds.
+                </p>
+                <div class="mt-4">
+                    <span class="badge bg-primary" style="background: var(--primary-kid)!important;">
+                        Bright & Playful
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="age-group-card age-group-9-11">
+                <span class="age-group-emoji">🧩</span>
+                <h3 class="mb-3" style="color: var(--secondary-kid);">Ages 9-11</h3>
+                <p class="fun-card-text">
+                    Interactive puzzles, logical sequences, and creative problem-solving 
+                    for growing thinkers.
+                </p>
+                <div class="mt-4">
+                    <span class="badge" style="background: var(--secondary-kid)!important;">
+                        Interactive Learning
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="age-group-card age-group-12-14">
+                <span class="age-group-emoji">🔍</span>
+                <h3 class="mb-3" style="color: var(--info-kid);">Ages 12-14</h3>
+                <p class="fun-card-text">
+                    Advanced reasoning, complex patterns, and critical thinking 
+                    challenges for developing minds.
+                </p>
+                <div class="mt-4">
+                    <span class="badge" style="background: var(--info-kid)!important;">
+                        Advanced Challenges
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works -->
+<div class="how-it-works">
+    <h2 class="text-center mb-5" style="color: var(--secondary-kid);">
+        <i class="fas fa-play-circle me-2"></i> How It Works
+    </h2>
+    
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="step-item">
+                <h4 style="color: var(--primary-kid);">Step 1: Create Your Family Account</h4>
+                <p class="fun-card-text">
+                    Sign up for free and add your children's profiles. It takes just 2 minutes 
+                    to get started on your cognitive development journey.
+                </p>
+            </div>
+            
+            <div class="step-item">
+                <h4 style="color: var(--secondary-kid);">Step 2: Choose Age-Appropriate Tests</h4>
+                <p class="fun-card-text">
+                    Our system automatically selects the perfect difficulty level based on 
+                    your child's age, ensuring just-right challenges.
+                </p>
+            </div>
+            
+            <div class="step-item">
+                <h4 style="color: var(--info-kid);">Step 3: Enjoy Fun Learning Sessions</h4>
+                <p class="fun-card-text">
+                    Children engage with colorful, animated tests that feel like games while 
+                    developing essential cognitive skills.
+                </p>
+            </div>
+            
+            <div class="step-item">
+                <h4 style="color: var(--fun-purple);">Step 4: Track Progress & Growth</h4>
+                <p class="fun-card-text">
+                View detailed reports on strengths, areas for improvement, and track 
+                cognitive development over time.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features -->
+<div class="row mt-5">
+    <div class="col-md-6 mb-4">
+        <div class="fun-card">
+            <div class="fun-card-icon" style="color: var(--primary-kid);">
+                <i class="fas fa-brain"></i>
+            </div>
+            <h3 class="fun-card-title">Develop Essential Skills</h3>
+            <p class="fun-card-text">
+                Our tests are designed using Ravens Progressive Matrices methodology to 
+                enhance pattern recognition, logical reasoning, and problem-solving abilities 
+                crucial for academic and life success.
+            </p>
+            <div class="mt-4">
+                <span class="badge me-2" style="background: var(--primary-kid)!important;">Pattern Recognition</span>
+                <span class="badge me-2" style="background: var(--secondary-kid)!important;">Logical Thinking</span>
+                <span class="badge" style="background: var(--info-kid)!important;">Problem Solving</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="fun-card">
+            <div class="fun-card-icon" style="color: var(--success-kid);">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h3 class="fun-card-title">Expert-Designed Content</h3>
+            <p class="fun-card-text">
+                Created by educational psychologists and cognitive development experts, 
+                our 500+ question bank ensures fresh, challenging content that grows with 
+                your child.
+            </p>
+            <div class="mt-4">
+                <div class="progress mb-2" style="height: 10px;">
+                    <div class="progress-bar" style="width: 95%; background: var(--primary-kid);"></div>
+                </div>
+                <small class="text-muted">95% of parents report improved problem-solving skills</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Testimonials -->
+<div class="testimonial-section">
+    <h2 class="text-center mb-5" style="color: var(--secondary-kid);">
+        <i class="fas fa-heart me-2"></i> What Parents Say
+    </h2>
+    
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="testimonial-card">
+                <p class="testimonial-text">
+                    "My 8-year-old daughter looks forward to her 'brain games' every day! 
+                    She doesn't even realize she's learning while having fun."
+                </p>
+                <div class="testimonial-author">
+                    <i class="fas fa-user-circle"></i>
+                    Sarah M., Parent
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="testimonial-card">
+                <p class="testimonial-text">
+                    "The progress tracking helped us identify our son's strengths in 
+                    spatial reasoning. His math teacher noticed improvement too!"
+                </p>
+                <div class="testimonial-author">
+                    <i class="fas fa-user-circle"></i>
+                    David L., Educator & Parent
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="testimonial-card">
+                <p class="testimonial-text">
+                    "Perfect balance of education and entertainment. The age-specific 
+                    design really makes a difference for my two kids at different levels."
+                </p>
+                <div class="testimonial-author">
+                    <i class="fas fa-user-circle"></i>
+                    Maria K., Parent of Two
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="testimonial-card">
+                <p class="testimonial-text">
+                    "As a child psychologist, I appreciate the research-based approach. 
+                    It's become part of my recommended tools for cognitive development."
+                </p>
+                <div class="testimonial-author">
+                    <i class="fas fa-user-md"></i>
+                    Dr. James P., Child Psychologist
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Final CTA -->
+<div class="text-center mt-5 py-5">
+    <h2 class="mb-4" style="color: var(--secondary-kid);">
+        Ready to Start the Learning Adventure?
+    </h2>
+    <p class="mb-4" style="font-size: 1.2rem; color: #666;">
+        Join thousands of families developing young minds through fun, engaging challenges.
+    </p>
+    
+    {% if not current_user.is_authenticated %}
+    <div class="mt-4">
+        <a href="{{ url_for('register') }}" class="cta-button me-3" style="padding: 20px 50px; font-size: 1.3rem;">
+            <i class="fas fa-child me-2"></i> Get Started Free
+        </a>
+        <a href="{{ url_for('login') }}" class="cta-button cta-button-secondary" style="padding: 20px 50px; font-size: 1.3rem;">
+            <i class="fas fa-users me-2"></i> Existing Family Login
+        </a>
+    </div>
+    <p class="mt-3 text-muted">
+        No credit card required • Free forever plan available • 100% child-safe
+    </p>
+    {% else %}
+    <div class="mt-4">
+        <a href="{{ url_for('dashboard') }}" class="cta-button" style="padding: 20px 50px; font-size: 1.3rem;">
+            <i class="fas fa-home me-2"></i> Go to Family Dashboard
+        </a>
+        <a href="{{ url_for('add_child') }}" class="cta-button cta-button-secondary ms-3" style="padding: 20px 50px; font-size: 1.3rem;">
+            <i class="fas fa-plus me-2"></i> Add Another Child
+        </a>
+    </div>
+    {% endif %}
+    
+    <div class="mt-5 pt-4">
+        <div class="row">
+            <div class="col-md-3 col-6 mb-3">
+                <div class="text-center">
+                    <div class="display-6 fw-bold" style="color: var(--primary-kid);">500+</div>
+                    <div class="text-muted">Questions</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="text-center">
+                    <div class="display-6 fw-bold" style="color: var(--secondary-kid);">3</div>
+                    <div class="text-muted">Age Groups</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="text-center">
+                    <div class="display-6 fw-bold" style="color: var(--info-kid);">100%</div>
+                    <div class="text-muted">Safe & Secure</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="text-center">
+                    <div class="display-6 fw-bold" style="color: var(--fun-green);">Free</div>
+                    <div class="text-muted">Basic Plan</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Add interactive animations to elements
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add hover effects to cards
+        document.querySelectorAll('.fun-card, .age-group-card, .feature-item').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Add click animations to buttons
+        document.querySelectorAll('.cta-button').forEach(button => {
+            button.addEventListener('click', function() {
+                // Add ripple effect
+                const ripple = document.createElement('span');
+                ripple.style.cssText = `
+                    position: absolute;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.7);
+                    transform: scale(0);
+                    animation: ripple 0.6s linear;
+                `;
+                
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = event.clientX - rect.left - size / 2;
+                const y = event.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+        
+        // Add ripple animation to CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Animate counters on scroll
+        function animateCounters() {
+            const counters = document.querySelectorAll('.display-6');
+            counters.forEach(counter => {
+                const target = parseInt(counter.textContent);
+                let current = 0;
+                const increment = target / 50;
+                
+                const updateCounter = () => {
+                    if (current < target) {
+                        current += increment;
+                        counter.textContent = Math.floor(current);
+                        setTimeout(updateCounter, 20);
+                    } else {
+                        counter.textContent = target;
+                    }
+                };
+                
+                updateCounter();
+            });
+        }
+        
+        // Trigger counter animation when in view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        const statsSection = document.querySelector('.text-center.mt-5.py-5');
+        if (statsSection) {
+            observer.observe(statsSection);
+        }
+    });
+</script>
+{% endblock %}

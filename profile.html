@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0"><i class="fas fa-user"></i> User Profile</h3>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-4 text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-user-circle fa-5x text-primary"></i>
+                        </div>
+                        <h4>{{ user.username }}</h4>
+                        <p class="text-muted">Member since {{ user.created_at.strftime('%B %Y') }}</p>
+                    </div>
+                    <div class="col-md-8">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th><i class="fas fa-user"></i> Username</th>
+                                <td>{{ user.username }}</td>
+                            </tr>
+                            <tr>
+                                <th><i class="fas fa-envelope"></i> Email</th>
+                                <td>{{ user.email }}</td>
+                            </tr>
+                            <tr>
+                                <th><i class="fas fa-calendar"></i> Account Created</th>
+                                <td>{{ user.created_at.strftime('%B %d, %Y') }}</td>
+                            </tr>
+                            <tr>
+                                <th><i class="fas fa-child"></i> Children Registered</th>
+                                <td>{{ user.children|length }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-chart-line"></i> Account Statistics</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    {% set total_tests = namespace(count=0) %}
+                                    {% for child in user.children %}
+                                        {% set total_tests.count = total_tests.count + child.test_results|length %}
+                                    {% endfor %}
+                                    
+                                    <div class="col-md-4">
+                                        <div class="stat-box">
+                                            <h2>{{ user.children|length }}</h2>
+                                            <p class="text-muted">Children</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="stat-box">
+                                            <h2>{{ total_tests.count }}</h2>
+                                            <p class="text-muted">Tests Taken</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        {% set avg_score = namespace(value=0) %}
+                                        {% set count = namespace(value=0) %}
+                                        {% for child in user.children %}
+                                            {% for result in child.test_results %}
+                                                {% set avg_score.value = avg_score.value + result.score %}
+                                                {% set count.value = count.value + 1 %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                        {% if count.value > 0 %}
+                                            {% set avg_score.value = avg_score.value / count.value %}
+                                        {% endif %}
+                                        
+                                        <div class="stat-box">
+                                            <h2>{{ "%.1f"|format(avg_score.value) }}%</h2>
+                                            <p class="text-muted">Average Score</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

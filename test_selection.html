@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Test Selection{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0"><i class="fas fa-play-circle"></i> Start Test for {{ child.name }}</h3>
+            </div>
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    <i class="fas fa-child fa-5x text-primary mb-3"></i>
+                    <h4>{{ child.name }}, Age {{ child.age }}</h4>
+                    <p class="text-muted">
+                        {% if child.age >= 6 and child.age <= 8 %}
+                            Age Group: 6-8 Years (Animated Interface)
+                        {% elif child.age >= 9 and child.age <= 11 %}
+                            Age Group: 9-11 Years (Moderate Difficulty)
+                        {% else %}
+                            Age Group: 12-14 Years (Advanced Difficulty)
+                        {% endif %}
+                    </p>
+                </div>
+                
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> Test Information</h5>
+                    <ul class="text-start">
+                        <li>20 questions based on cognitive skills assessment</li>
+                        <li>Time limit: 30 minutes</li>
+                        <li>Questions adapt to age group</li>
+                        <li>Instant results with detailed analysis</li>
+                        <li>Questions selected from large question bank</li>
+                    </ul>
+                </div>
+                
+                <div class="mt-4">
+                    <a href="{{ url_for('start_test', child_id=child.id) }}" class="btn btn-success btn-lg">
+                        <i class="fas fa-play"></i> Start Test Now
+                    </a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        {% if previous_tests %}
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-history"></i> Previous Test Results</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Score</th>
+                                <th>Correct Answers</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for test in previous_tests %}
+                            <tr>
+                                <td>{{ test.taken_at.strftime('%Y-%m-%d') }}</td>
+                                <td>
+                                    <span class="badge {% if test.score >= 80 %}bg-success{% elif test.score >= 60 %}bg-warning{% else %}bg-danger{% endif %}">
+                                        {{ "%.1f"|format(test.score) }}%
+                                    </span>
+                                </td>
+                                <td>{{ test.correct_answers }}/{{ test.total_questions }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

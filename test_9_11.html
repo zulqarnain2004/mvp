@@ -1,0 +1,650 @@
+{% extends "base.html" %}
+
+{% block title %}Test - {{ child.name }} (Ages 9-11){% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Age 9-11: Dynamic, Interactive Design */
+    .age-9-11 {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+    
+    .test-wrapper {
+        perspective: 1500px;
+        padding: 20px;
+    }
+    
+    .test-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        padding: 40px;
+        margin: 30px auto;
+        max-width: 1000px;
+        box-shadow: 
+            0 25px 50px rgba(0, 0, 0, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        animation: cardAppear 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-style: preserve-3d;
+    }
+    
+    .test-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 25px 40px;
+        border-radius: 20px 20px 0 0;
+        margin: -40px -40px 30px -40px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .test-header::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, 
+            transparent 0%, 
+            rgba(255, 255, 255, 0.1) 50%, 
+            transparent 100%);
+        animation: shine 3s infinite linear;
+    }
+    
+    .question-number {
+        font-size: 2rem;
+        font-weight: 800;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 10px 25px;
+        border-radius: 50px;
+        display: inline-block;
+        animation: numberPulse 2s infinite;
+    }
+    
+    .question-text {
+        font-size: 1.4rem;
+        line-height: 1.7;
+        color: #2d3748;
+        margin: 30px 0;
+        padding: 25px;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.08));
+        border-radius: 15px;
+        border-left: 5px solid #667eea;
+        animation: textReveal 1s ease-out;
+    }
+    
+    /* Interactive Grid Layout */
+    .options-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+        margin: 40px 0;
+    }
+    
+    .option-card {
+        background: white;
+        border: 3px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 30px;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        animation: optionSlideIn 0.6s ease-out forwards;
+        opacity: 0;
+        transform: translateX(-50px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    }
+    
+    .option-card:nth-child(1) { animation-delay: 0.1s; }
+    .option-card:nth-child(2) { animation-delay: 0.2s; }
+    .option-card:nth-child(3) { animation-delay: 0.3s; }
+    .option-card:nth-child(4) { animation-delay: 0.4s; }
+    
+    .option-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(102, 126, 234, 0.1), 
+            transparent);
+        transition: left 0.6s;
+    }
+    
+    .option-card:hover::before {
+        left: 100%;
+    }
+    
+    .option-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        border-color: #667eea;
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.15);
+    }
+    
+    .option-card.selected {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-color: #667eea;
+        color: white;
+        transform: translateY(-5px) scale(1.03);
+        box-shadow: 0 25px 50px rgba(102, 126, 234, 0.25);
+        animation: selectedGlow 2s infinite alternate;
+    }
+    
+    .option-label {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .option-letter {
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border-radius: 50%;
+        font-weight: 800;
+        font-size: 1.3rem;
+        margin-right: 20px;
+        transition: all 0.4s ease;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+    
+    .option-card.selected .option-letter {
+        background: white;
+        color: #667eea;
+        transform: rotate(360deg) scale(1.1);
+        box-shadow: 0 10px 20px rgba(255, 255, 255, 0.3);
+    }
+    
+    .option-text {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        flex: 1;
+    }
+    
+    /* Advanced Timer Widget */
+    .timer-widget {
+        position: fixed;
+        top: 120px;
+        right: 40px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        animation: timerFloat 6s ease-in-out infinite;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .timer-display {
+        font-family: 'Courier New', 'SF Mono', Monaco, monospace;
+        font-size: 2.5rem;
+        font-weight: 900;
+        color: #2d3748;
+        text-align: center;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .timer-progress {
+        width: 100%;
+        height: 8px;
+        background: #e2e8f0;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 15px;
+    }
+    
+    .timer-progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        width: 100%;
+        border-radius: 4px;
+        animation: timerShrink 1800s linear forwards;
+    }
+    
+    /* Progress Dashboard */
+    .progress-dashboard {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 30px;
+        margin: 40px auto;
+        max-width: 1000px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        animation: slideUp 0.8s ease-out;
+    }
+    
+    .progress-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+    
+    .stat-box {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+    
+    .stat-box:hover {
+        transform: translateY(-5px);
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #667eea;
+        margin-bottom: 5px;
+    }
+    
+    /* Navigation Buttons with Hover Effects */
+    .navigation-panel {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 50px;
+        padding-top: 30px;
+        border-top: 2px solid rgba(226, 232, 240, 0.5);
+    }
+    
+    .nav-btn {
+        padding: 18px 45px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        border-radius: 15px;
+        border: none;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .nav-btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+    
+    .nav-btn:hover::before {
+        width: 400px;
+        height: 400px;
+    }
+    
+    .nav-btn:disabled {
+        opacity: 0.5;
+        transform: none !important;
+    }
+    
+    .nav-btn-prev {
+        background: linear-gradient(135deg, #718096, #4a5568);
+        color: white;
+    }
+    
+    .nav-btn-next {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+    }
+    
+    .nav-btn-submit {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+    }
+    
+    /* Animations */
+    @keyframes cardAppear {
+        from {
+            opacity: 0;
+            transform: translateY(100px) rotateX(-20deg);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) rotateX(0);
+        }
+    }
+    
+    @keyframes shine {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+    
+    @keyframes numberPulse {
+        0%, 100% { transform: scale(1); box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3); }
+        50% { transform: scale(1.05); box-shadow: 0 10px 25px rgba(255, 255, 255, 0.5); }
+    }
+    
+    @keyframes textReveal {
+        from {
+            clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
+        }
+        to {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+    }
+    
+    @keyframes optionSlideIn {
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    @keyframes selectedGlow {
+        0% { box-shadow: 0 25px 50px rgba(102, 126, 234, 0.25); }
+        100% { box-shadow: 0 30px 60px rgba(102, 126, 234, 0.4); }
+    }
+    
+    @keyframes timerFloat {
+        0%, 100% { 
+            transform: translateY(0) rotate(0deg); 
+        }
+        33% { 
+            transform: translateY(-15px) rotate(2deg); 
+        }
+        66% { 
+            transform: translateY(-5px) rotate(-1deg); 
+        }
+    }
+    
+    @keyframes timerShrink {
+        from { width: 100%; }
+        to { width: 0%; }
+    }
+    
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Particle Background */
+    .particles-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: -1;
+    }
+    
+    .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        animation: particleFloat 20s infinite linear;
+    }
+    
+    @keyframes particleFloat {
+        0% {
+            transform: translateY(100vh) rotate(0deg);
+            opacity: 0;
+        }
+        10% {
+            opacity: 1;
+        }
+        90% {
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(-100px) rotate(720deg);
+            opacity: 0;
+        }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .options-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .timer-widget {
+            position: relative;
+            top: auto;
+            right: auto;
+            margin: 20px auto;
+            width: 90%;
+        }
+        
+        .progress-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .test-card {
+            padding: 25px;
+            margin: 20px;
+        }
+        
+        .test-header {
+            padding: 20px 25px;
+            margin: -25px -25px 20px -25px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .progress-stats {
+            grid-template-columns: 1fr;
+        }
+        
+        .nav-btn {
+            padding: 15px 30px;
+            font-size: 1rem;
+        }
+        
+        .question-text {
+            font-size: 1.2rem;
+            padding: 20px;
+        }
+        
+        .option-card {
+            padding: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="test-container" class="age-9-11">
+    <!-- Particle Background -->
+    <div class="particles-bg" id="particles-bg"></div>
+    
+    <!-- Timer Widget -->
+    <div class="timer-widget">
+        <div class="timer-display" id="timer">30:00</div>
+        <div class="timer-label text-center text-muted">Time Remaining</div>
+        <div class="timer-progress">
+            <div class="timer-progress-bar" id="timer-progress"></div>
+        </div>
+    </div>
+    
+    <div class="test-wrapper">
+        <!-- Progress Dashboard -->
+        <div class="progress-dashboard">
+            <div class="progress-stats">
+                <div class="stat-box">
+                    <div class="stat-value" id="question-current">1</div>
+                    <div class="stat-label text-muted">Current</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="questions-total">{{ questions|length }}</div>
+                    <div class="stat-label text-muted">Total</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="progress-percent">0%</div>
+                    <div class="stat-label text-muted">Progress</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="answers-count">0</div>
+                    <div class="stat-label text-muted">Answered</div>
+                </div>
+            </div>
+            
+            <div class="progress-visual">
+                <div class="progress-bar-container">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span id="question-counter" class="fw-bold">Question 1 of {{ questions|length }}</span>
+                        <span id="time-used" class="fw-bold">00:00 Used</span>
+                    </div>
+                    <div class="progress" style="height: 12px; border-radius: 10px;">
+                        <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                             role="progressbar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test Content Area -->
+        <div id="test-content">
+            <div class="text-center py-5">
+                <div class="loading-wave d-inline-block">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <h4 class="mt-4">Loading Challenge...</h4>
+                <p class="text-muted">Preparing interactive questions for you</p>
+            </div>
+        </div>
+        
+        <!-- Navigation Panel -->
+        <div class="navigation-panel">
+            <button id="prev-btn" class="nav-btn nav-btn-prev" disabled>
+                <i class="fas fa-chevron-left me-2"></i> Previous
+            </button>
+            <button id="next-btn" class="nav-btn nav-btn-next">
+                Next Challenge <i class="fas fa-chevron-right ms-2"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Results Modal -->
+<div id="completion-modal" class="modal fade" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="border-radius: 25px; overflow: hidden; border: none;">
+            <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <h5 class="modal-title text-white">
+                    <i class="fas fa-trophy me-2"></i> Challenge Completed!
+                </h5>
+                <div class="timer-result text-white">
+                    <i class="fas fa-clock me-1"></i>
+                    <span id="final-time">30:00</span>
+                </div>
+            </div>
+            <div class="modal-body p-5">
+                <div id="result-content" class="text-center">
+                    <!-- Results will be displayed here -->
+                </div>
+            </div>
+            <div class="modal-footer" style="background: #f8f9fa;">
+                <div class="d-flex justify-content-between w-100">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-lg btn-outline-primary">
+                        <i class="fas fa-home me-2"></i> Dashboard
+                    </a>
+                    <a id="view-results-btn" href="#" class="btn btn-lg btn-primary">
+                        <i class="fas fa-chart-line me-2"></i> View Analytics
+                    </a>
+                    <button id="retry-btn" class="btn btn-lg btn-success">
+                        <i class="fas fa-redo me-2"></i> Try Again
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Pass data from Flask to JavaScript
+    const questions = {{ questions|tojson }};
+    const childId = {{ child.id }};
+    const ageGroup = "{{ age_group }}";
+    const childName = "{{ child.name }}";
+    
+    // Create particle background
+    function createParticleBackground() {
+        const container = document.getElementById('particles-bg');
+        const particleCount = 80;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            particle.style.cssText = `
+                left: ${Math.random() * 100}%;
+                animation-delay: ${Math.random() * 10}s;
+                animation-duration: ${Math.random() * 20 + 10}s;
+                width: ${Math.random() * 6 + 2}px;
+                height: ${Math.random() * 6 + 2}px;
+                background: rgba(${Math.random() * 55 + 200}, ${Math.random() * 55 + 200}, 255, ${Math.random() * 0.3 + 0.1});
+            `;
+            
+            container.appendChild(particle);
+        }
+    }
+    
+    // Create wave loading animation
+    const waveStyle = document.createElement('style');
+    waveStyle.textContent = `
+        .loading-wave {
+            display: inline-flex;
+            gap: 12px;
+        }
+        .loading-wave div {
+            width: 14px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 7px;
+            animation: wave 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .loading-wave div:nth-child(1) { animation-delay: -0.4s; }
+        .loading-wave div:nth-child(2) { animation-delay: -0.3s; }
+        .loading-wave div:nth-child(3) { animation-delay: -0.2s; }
+        .loading-wave div:nth-child(4) { animation-delay: -0.1s; }
+        .loading-wave div:nth-child(5) { animation-delay: 0s; }
+        
+        @keyframes wave {
+            0%, 100% { transform: scaleY(0.4); }
+            50% { transform: scaleY(1.2); }
+        }
+    `;
+    document.head.appendChild(waveStyle);
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        createParticleBackground();
+        console.log("Age 9-11 test initialized for:", childName);
+    });
+</script>
+<script src="{{ url_for('static', filename='js/test_9_11.js') }}"></script>
+{% endblock %}

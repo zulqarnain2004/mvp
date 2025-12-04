@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-user-circle"></i> Welcome, {{ current_user.username }}!</h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Manage your children's cognitive skills tests and view their progress.</p>
+                <a href="{{ url_for('add_child') }}" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Add New Child
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="mb-3"><i class="fas fa-child"></i> Your Children</h3>
+        
+        {% if children %}
+        <div class="row">
+            {% for child in children %}
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0">{{ child.name }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">
+                            <strong>Age:</strong> {{ child.age }} years<br>
+                            <strong>Added:</strong> {{ child.created_at.strftime('%Y-%m-%d') }}
+                        </p>
+                        
+                        {% set latest_result = child.test_results|sort(attribute='taken_at', reverse=true)|first %}
+                        {% if latest_result %}
+                        <div class="alert alert-info">
+                            <strong>Latest Score:</strong> {{ "%.1f"|format(latest_result.score) }}%<br>
+                            <small>{{ latest_result.taken_at.strftime('%Y-%m-%d') }}</small>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ url_for('test_selection', child_id=child.id) }}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-play"></i> Start Test
+                        </a>
+                        <a href="{{ url_for('results', child_id=child.id) }}" class="btn btn-info btn-sm">
+                            <i class="fas fa-chart-bar"></i> View Results
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle"></i> You haven't added any children yet. 
+            <a href="{{ url_for('add_child') }}">Add your first child</a> to get started.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+
+{% block title %}Test - {{ child.name }} (Ages 6-8){% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Age 6-8 specific styles */
+    .age-6-8 .question-container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 25px;
+        padding: 30px;
+        margin: 20px 0;
+        border: 5px solid;
+        border-image: linear-gradient(45deg, #ff9a9e, #fad0c4, #a1c4fd, #c2e9fb) 1;
+        animation: borderGlow 3s infinite;
+    }
+    
+    .age-6-8 .question-text {
+        font-size: 1.4rem;
+        color: #333;
+        margin-bottom: 25px;
+        line-height: 1.6;
+    }
+    
+    .age-6-8 .options-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    
+    .age-6-8 .option-item {
+        background: white;
+        border: 3px solid #ff9a9e;
+        border-radius: 20px;
+        padding: 25px 20px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        min-height: 100px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .age-6-8 .option-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 154, 158, 0.2), transparent);
+        transition: left 0.6s;
+    }
+    
+    .age-6-8 .option-item:hover::before {
+        left: 100%;
+    }
+    
+    .age-6-8 .option-item:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 25px rgba(255, 154, 158, 0.3);
+        border-color: #a1c4fd;
+    }
+    
+    .age-6-8 .option-item.selected {
+        background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+        border-color: #667eea;
+        color: white;
+        transform: scale(1.05);
+        animation: selectedPulse 1s infinite;
+    }
+    
+    .age-6-8 .option-letter {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        background: #ff9a9e;
+        color: white;
+        border-radius: 50%;
+        margin-right: 15px;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+    
+    .age-6-8 .option-item.selected .option-letter {
+        background: #667eea;
+        animation: letterSpin 0.5s ease;
+    }
+    
+    .age-6-8 .timer-container {
+        position: fixed;
+        top: 100px;
+        right: 30px;
+        background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+        padding: 15px 25px;
+        border-radius: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        animation: timerBounce 2s infinite;
+    }
+    
+    .age-6-8 #timer {
+        font-size: 2rem;
+        font-weight: bold;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .age-6-8 .progress-container {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 25px;
+        padding: 20px;
+        margin: 20px 0;
+    }
+    
+    .age-6-8 .progress-bar {
+        height: 20px;
+        border-radius: 10px;
+        background: linear-gradient(90deg, #ff9a9e, #fad0c4, #a1c4fd, #c2e9fb);
+        background-size: 200% 100%;
+        animation: progressShimmer 2s infinite linear;
+    }
+    
+    /* Animations */
+    @keyframes borderGlow {
+        0%, 100% { box-shadow: 0 0 20px rgba(255, 154, 158, 0.5); }
+        50% { box-shadow: 0 0 40px rgba(161, 196, 253, 0.5); }
+    }
+    
+    @keyframes selectedPulse {
+        0%, 100% { transform: scale(1.05); }
+        50% { transform: scale(1.08); }
+    }
+    
+    @keyframes letterSpin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    @keyframes timerBounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes progressShimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+    
+    /* Fun elements */
+    .fun-elements {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 999;
+    }
+    
+    .fun-element {
+        position: absolute;
+        font-size: 2rem;
+        animation: funFloat 10s linear infinite;
+    }
+    
+    @keyframes funFloat {
+        0% {
+            transform: translateY(100vh) rotate(0deg);
+            opacity: 0;
+        }
+        10% {
+            opacity: 1;
+        }
+        90% {
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(-100px) rotate(360deg);
+            opacity: 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="test-container" class="age-6-8">
+    <!-- Fun Elements -->
+    <div class="fun-elements"></div>
+    
+    <!-- Timer -->
+    <div class="timer-container">
+        <div id="timer">30:00</div>
+        <small style="color: white; opacity: 0.8;">Time Remaining</small>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <!-- Progress -->
+                <div class="progress-container">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span id="question-counter" class="fw-bold">Question 1 of {{ questions|length }}</span>
+                        <span id="progress-percent" class="fw-bold">0%</span>
+                    </div>
+                    <div class="progress">
+                        <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <!-- Question Content -->
+                <div id="test-content">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" style="width: 4rem; height: 4rem;" role="status"></div>
+                        <h4 class="mt-4">Getting ready for fun learning!</h4>
+                        <p class="text-muted">Preparing exciting questions for you...</p>
+                    </div>
+                </div>
+                
+                <!-- Navigation -->
+                <div class="navigation-buttons mt-4">
+                    <div class="d-flex justify-content-between">
+                        <button id="prev-btn" class="btn btn-lg btn-outline-primary" disabled>
+                            <i class="fas fa-arrow-left me-2"></i> Previous
+                        </button>
+                        <button id="next-btn" class="btn btn-lg btn-primary">
+                            Next <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Completion Modal -->
+<div id="completion-modal" class="modal fade" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="border-radius: 30px; overflow: hidden;">
+            <div class="modal-header" style="background: linear-gradient(135deg, #ff9a9e, #fad0c4);">
+                <h5 class="modal-title text-white">
+                    <i class="fas fa-trophy me-2"></i> Amazing Job!
+                </h5>
+            </div>
+            <div class="modal-body p-5">
+                <div id="result-content" class="text-center">
+                    <!-- Results will be displayed here -->
+                </div>
+            </div>
+            <div class="modal-footer" style="background: #f8f9fa;">
+                <a href="{{ url_for('dashboard') }}" class="btn btn-lg btn-outline-primary">
+                    <i class="fas fa-home me-2"></i> Back to Dashboard
+                </a>
+                <a id="view-results-btn" href="#" class="btn btn-lg btn-primary">
+                    <i class="fas fa-chart-bar me-2"></i> See Results
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Pass data from Flask to JavaScript
+    const questions = {{ questions|tojson }};
+    const childId = {{ child.id }};
+    const ageGroup = "{{ age_group }}";
+    
+    // Add fun elements
+    function addFunElements() {
+        const funElements = ['🎨', '🎮', '🧩', '🎯', '🌟', '🌈', '🦄', '🐱', '🐶', '🐼'];
+        const container = document.querySelector('.fun-elements');
+        
+        funElements.forEach((emoji, index) => {
+            const element = document.createElement('div');
+            element.className = 'fun-element';
+            element.textContent = emoji;
+            element.style.cssText = `
+                left: ${Math.random() * 100}%;
+                animation-delay: ${index * 2}s;
+                font-size: ${Math.random() * 30 + 20}px;
+                opacity: ${Math.random() * 0.3 + 0.1};
+            `;
+            container.appendChild(element);
+        });
+    }
+    
+    // Initialize animations
+    document.addEventListener('DOMContentLoaded', function() {
+        addFunElements();
+        initAgeAnimations(ageGroup);
+        
+        // Your existing test initialization code here...
+        // (You'll need to integrate your existing test.js logic)
+    });
+</script>
+<script src="{{ url_for('static', filename='js/test_6_8.js') }}"></script>
+{% endblock %}
